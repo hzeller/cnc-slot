@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-static constexpr float kSlotDeep = 10.16;
+static constexpr float kSlotDeep = 9;
 static constexpr char kHeader[] = R"(
 (module cnc-card-edge-%d (layer F.Cu) (tedit %X)
   (fp_text reference REF** (at 8.5 0 270) (layer F.SilkS)
@@ -78,7 +78,7 @@ static void lineto(float x, float y) {
 }
 
 static void pad(int n, float pos_y, bool recessed, const char *layer) {
-    const float trace_origin = 0.5;
+    const float trace_origin = 1.27;
     const float solder_margin = 2.5;
     float pad_len = kSlotDeep + trace_origin;
     const float origin_x = pad_len/2 - trace_origin;
@@ -90,7 +90,7 @@ static void pad(int n, float pos_y, bool recessed, const char *layer) {
     pad_len -= recess_shorter;
     pos_x += recess_shorter/2;
 
-    printf("  (pad %d smd roundrect (at %.2f %.2f) (size %.2f 1.5) "
+    printf("  (pad %d smd roundrect (at %.2f %.2f) (size %.2f 1.27) "
            "(drill (offset %.2f 0)) (layers %s)(roundrect_rratio 0.25) (solder_mask_margin %.2f))\n",
            n, pos_x, pos_y, pad_len, -origin_x, layer, solder_margin);
 }
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
     const float distance = 2.54;
     const float len = distance * positions;
     const float start_component = (distance * (positions+2))/2;
-    const float extra_wide = 1.5;
+    const float extra_wide = 1.3;
     const float slot_thick = kSlotDeep;
     const float corner = 0.7;
     const float top_radius = 0.635;
