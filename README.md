@@ -96,7 +96,7 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 |Pos|Connection    | BTM | TOP |  Connection | Remarks
 |---|-------------:|:---:|:---:|:------------|---------------
 | 1 | E-Stop-Sw#1  |  1  |  2  | GND         | Emergency Stop Normally Closed, 10-20mA current loop.
-| 2 |          N/C |  3  |  4  | 5V-out      | -> 5V, max 1A out (for sensors)
+| 2 |       5V-out |  3  |  4  | n/c         | -> 5V, max 1A out (for sensors)
 | 3 |        PWM-1 |  5  |  6  | PWM-1       | 4 parallel pins: 12A high side switch
 | 4 |        PWM-1 |  7  |  8  | PWM-1       | (optional: push pull offering H-Bridge with PWM-2)
 | 5 |        PWM-2 |  9  | 10  | PWM-2       | 4 parallel pins: 12A high side switch
@@ -128,7 +128,7 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 |31 |     Motor6+B | 61  | 62  | Motor6-B    | **[---- END 31 Pos configuration ----]**
 |32 |     Motor7+A | 63  | 64  | Motor7-A    | Anyone needs more than 6 motors ?
 |33 |     Motor7+B | 65  | 66  | Motor7-B
-|34 |         N/C  | 67  | 68  | N/C         | TODO: what else we want ?
+|34 |         N/C  | 67  | 68  | N/C         | TODO: what else we want ? 8th motor?
 |35 |         N/C  | 69  | 70  | N/C
 |36 |         GND  | 71  | 72  | GND         | **[---- END 36 Pos configuration ----]**
 
