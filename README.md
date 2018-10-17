@@ -82,7 +82,8 @@ The goals are to cover typical use cases in these small machines:
 The fingers on the card edge come in two lengths
 
   * All signals including GND: connect first, all the way to the edge.
-  * Emergency stop switches connect with recessed fingers.
+  * Emergency stop switches connect with recessed fingers so that they
+    are triggered first when the connectors are separated.
 
 All output pins can only switch on iff the two e-stop wires on pin 1 and 50
 are connected with each other (this will be a current loop of 10mA or so).
@@ -95,43 +96,108 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 
 |Pos|Connection    | BTM | TOP |  Connection | Remarks
 |---|-------------:|:---:|:---:|:------------|---------------
-| 1 | E-Stop-Sw#1  |  1  |  2  | GND         | Emergency Stop Normally Closed, 10-20mA current loop.
-| 2 |       5V-out |  3  |  4  | n/c         | -> 5V, max 1A out (for sensors)
-| 3 |        PWM-1 |  5  |  6  | PWM-1       | 4 parallel pins: 12A high side switch
-| 4 |        PWM-1 |  7  |  8  | PWM-1       | (optional: push pull offering H-Bridge with PWM-2)
-| 5 |        PWM-2 |  9  | 10  | PWM-2       | 4 parallel pins: 12A high side switch
-| 6 |        PWM-2 | 11  | 12  | PWM-2       | (optional: push pull offering H-Bridge with PWM-1)
-| 7 |        PWM-3 | 13  | 14  | PWM-4       | two 3A low side switching PWM (maybe need more?)
-| 8 |     Motor1+A | 15  | 16  | Motor1-A    | 4x Bipolar stepper motors.
-| 9 |     Motor1+B | 17  | 18  | Motor1-B    | ...
-|10 |     Motor2+A | 19  | 20  | Motor2-A
-|11 |     Motor2+B | 21  | 22  | Motor2-B
-|12 |     Motor3+A | 23  | 24  | Motor3-A
-|13 |     Motor3+B | 25  | 26  | Motor3-B
-|14 |     Motor4+A | 27  | 28  | Motor4-A
-|15 |     Motor4+B | 29  | 30  | Motor4-B
-|16 |          GND | 31  | 32  | GND
-|17 |      SW-NC-1 | 33  | 34  | SW-NC-2     |  end switches to GND,…
-|18 |      SW-NC-3 | 35  | 36  | SW-NC-4     |  …Normally Closed,…
-|19 |      SW-NC-5 | 37  | 38  | SW-NC-6     |  …Current Loop 10-20mA
-|20 |    TX-RS422+ | 39  | 40  | TX-RS422-   | RS422-TX. N/C if not supported.
-|21 |  RXTX-RS485+ | 41  | 42  | RXTX-RS485- | RS485 Bus and/or RS422-RX; N/C if not supported.
+| 1 |     EStop_1  |  1  |  2  | GND         | Emergency Stop Normally Closed, 10-20mA current loop.
+| 2 |       5V-out |  3  |  4  | _N/C_       | -> 5V, max 1A out (for sensors)
+| 3 |        PWM_1 |  5  |  6  | PWM_1       | 4 parallel pins: 12A high side switch
+| 4 |        PWM_1 |  7  |  8  | PWM_1       | (optional: push pull offering H-Bridge with PWM-2)
+| 5 |        PWM_2 |  9  | 10  | PWM_2       | 4 parallel pins: 12A high side switch
+| 6 |        PWM_2 | 11  | 12  | PWM_2       | (optional: push pull offering H-Bridge with PWM-1)
+| 7 |        PWM_3 | 13  | 14  | PWM_4       | two 3A low side switching PWM (maybe need more?)
+| 8 |        M1_A+ | 15  | 16  | M1_A-       | Stepper 1 (Bipolar stepper motor)
+| 9 |        M1_B+ | 17  | 18  | M1_B-       |
+|10 |        M2_A+ | 19  | 20  | M2_A-       | Stepper 2
+|11 |        M2_B+ | 21  | 22  | M2_B-       |
+|12 |        M3_A+ | 23  | 24  | M3_A-       | Stepper 3
+|13 |        M3_B+ | 25  | 26  | M3_B-       |
+|14 |        M4_A+ | 27  | 28  | M4_A-       | Stepper 4
+|15 |        M4_B+ | 29  | 30  | M4_B-       |
+|16 |          GND | 31  | 32  | GND         |
+|17 |         SW_1 | 33  | 34  | SW_2        |  end-stop/prober switches to GND,…
+|18 |         SW_3 | 35  | 36  | SW_4        |  …Current Loop 10-20mA
+|19 |         SW_5 | 37  | 38  | SW_6        | (prefer Normaly Closed for end-stops)
+|20 |    RS422_TX+ | 39  | 40  | RS422_TX-   | RS422-TX. _N/C_ if not supported.
+|21 |  RS485_RXTX+ | 41  | 42  | RS485_RXTX- | RS485 Bus and/or RS422-RX; _N/C_ if not supported.
 |22 |          GND | 43  | 44  | GND
-|23 |          N/C | 45  | 46  | N/C         | Not connected in Version #1.
-|24 |   Analog-IN1 | 47  | 48  | Analog-IN2  |  Analog inputs. TBD: range (0..2V?)
-|25 |          GND | 49  | 50  | E-Stop-Sw#2 | **[---- END 25 Pos configuration ----]**
-|26 |      SW-NC-7 | 51  | 52  | SW-NC-8     | similar to SW-NC-1 to SW-NC-6
-|27 |          N/C | 53  | 54  | N/C         | N/C in Version #1 (future: CAN+/CAN- or I²C SDA/SCL ?)
-|28 |     Motor5+A | 55  | 56  | Motor5-A
-|29 |     Motor5+B | 57  | 58  | Motor5-B
-|30 |     Motor6+A | 59  | 60  | Motor6-A
-|31 |     Motor6+B | 61  | 62  | Motor6-B    | **[---- END 31 Pos configuration ----]**
-|32 |     Motor7+A | 63  | 64  | Motor7-A    | Anyone needs more than 6 motors ?
-|33 |     Motor7+B | 65  | 66  | Motor7-B
-|34 |         N/C  | 67  | 68  | N/C         | TODO: what else we want ? 8th motor?
-|35 |         N/C  | 69  | 70  | N/C
+|23 |        _N/C_ | 45  | 46  | _N/C_       | Not connected in Version #1.
+|24 |        Ain_1 | 47  | 48  | Ain_2       | Analog inputs. 4-20mA to GND.
+|25 |          GND | 49  | 50  | EStop_2     | **[---- END 25 Pos configuration ----]**
+|26 |         SW_7 | 51  | 52  | SW_8        | similar to SW_1 to SW_6
+|27 |        _N/C_ | 53  | 54  | _N/C_       | N/C in Version #1 (future: CAN+/CAN- or I²C SDA/SCL ?)
+|28 |        M5_A+ | 55  | 56  | M5_A-       | Stepper 5
+|29 |        M5_B+ | 57  | 58  | M5_B-       |
+|30 |        M6_A+ | 59  | 60  | M6_A-       | Stepper 6
+|31 |        M6_B+ | 61  | 62  | M6_B-       | **[---- END 31 Pos configuration ----]**
+|32 |        M7_A+ | 63  | 64  | M7_A-       | Stepper 7.
+|33 |        M7_B+ | 65  | 66  | M7_B-       |
+|34 |       _N/C_  | 67  | 68  | _N/C_       | TODO: what else we want ? 8th motor?
+|35 |       _N/C_  | 69  | 70  | _N/C_
 |36 |         GND  | 71  | 72  | GND         | **[---- END 36 Pos configuration ----]**
 
-FAQ
- * Q: why are the motors numbered Motor1, Motor2 and not X, Y, Z ?
- * A: Depending on the geometry of the machine, this can have different meanings.
+## FAQ
+ * **Q:** why are the motors numbered Motor_1, Motor_2, ... and
+          not X, Y, Z ?<br/>
+   **A:** Depending on the geometry of the machine, this can have
+          different meanings. The mapping of motor number to axis happens
+	  in your motion control system configuration.
+
+ * **Q:** Why didn't you include feature foo or bar ?
+          It would only use two pins.<br/>
+   **A:** There are a myriad of potential features, but the pins are limited.
+          The specification intentionally leaves it open to add separate
+	  additional connectors to the control board if needed, while the bulk
+	  of commonly needed features are covered by this CNC-Slot.<br/>
+          It is encouraged to implement purely digital features
+          using the high-speed serial busses provided and are already commonly
+          used in the industry.<br/>
+          Finally, there are couple of pins left unconnected in version 1 for
+          which we might find good use in the future. Please propose one in the
+          issue tracker to discuss if you think it might be vitally important.
+
+ * **Q:** Why is the analog input reading this weird current range ?
+          I can't simply connect a NTC Thermistor to it.<br/>
+   **A:** Using thermistors directly in particular over longer cables
+          results in noisy measurements as they have a high
+	  impedance which results in less robust machines.
+	  Luckily, there is a standard way out: in industry settings, analog
+	  transducers of all sorts are very commonly translating their
+	  measurement range into a [current of 4..20mA][current loop].
+	  The low impedance makes this very robust. The CNC-Slot connector
+	  encourages this best practice and also makes it compatible with a
+	  myriad of existing sensors.<br/>
+	  Do adapt the thermistor, you need a little op-amp circuit on the
+	  machine side (best: close to the thermistor to minimize noise).
+
+ * **Q:** I see the end-switches are also labelled as current loop. Is that
+          complicated as with the thermistor ?<br/>
+   **A:** No. You just connect a microswitch between the connector and GND.<br/>
+          Current loop in that case means that the controller board will send
+	  a current of 10-20mA through the switch to make sure to not pick up
+	  noise.
+
+## Kicad Libraries
+
+### Schematic symbol
+There is a schematic symbol library in the [`kicad-library/`](./kicad-library)
+directory featuring three symbols to be used for implementing the control
+board or machine side in the `cnc-slot.lib` file.
+
+The symbols are all the same size so that it is easy to upgrade without having
+to re-wire.
+
+![](./img/cnc-slot-comparison.png)
+
+## Footprints
+
+For the card edge, there is a footprint including necessary `Edge.Cuts`
+layer in the [`cnc-slot.pretty`](./cnc-slot.pretty) directory.
+
+This is the footprint to be used on the machine side and typically you'll use
+it to create a breakout board to have the machine cabeling harness terminate
+in this connector.
+
+The library provides the three variants of card-edge footprints including the
+recessed pins for the Emergency stop.
+
+![](./img/card-edge-25-render.png)
+
+[current loop]: https://en.wikipedia.org/wiki/Current_loop
