@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 static constexpr float kSlotDeep = 9;
-static constexpr char kHeader[] = R"(
-(module cnc-card-edge-%d (layer F.Cu) (tedit %X)
+static constexpr char kHeader[] =
+R"((module cnc-card-edge-%d (layer F.Cu) (tedit %X)
   (fp_text reference REF** (at 8.5 0 270) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )

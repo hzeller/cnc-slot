@@ -1,5 +1,4 @@
-
-(module cnc-card-edge-31 (layer F.Cu) (tedit 5BC77FAF)
+(module cnc-card-edge-31 (layer F.Cu) (tedit 5BC7B597)
   (fp_text reference REF** (at 8.5 0 270) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
