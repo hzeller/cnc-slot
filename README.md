@@ -93,6 +93,7 @@ disconnected completely. This prevents fried motor drivers and accidental shorts
 Even a brief interruption of the e-stop will require a reset from software.
 
 N/C = Not Connected. Typically place holders for Version #1 of this spec.
+      Must not be connected to anything to allow future use.
 
 |Pos|Connection    | BTM | TOP |  Connection | Remarks
 |---|-------------:|:---:|:---:|:------------|---------------
@@ -135,12 +136,12 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 
 ## FAQ
  * **Q:** why are the motors numbered Motor_1, Motor_2, ... and
-          not X, Y, Z ?<br/>
+          not e.g. X, Y, Z ?<br/>
    **A:** Depending on the geometry of the machine, this can have
           different meanings. The mapping of motor number to axis happens
 	  in your motion control system configuration.
 
- * **Q:** Why didn't you include feature foo or bar ?
+ * **Q:** Why didn't you include feature _foo_ or _bar_ ?
           It would only use two pins.<br/>
    **A:** There are a myriad of potential features, but the pins are limited.
           The specification intentionally leaves it open to add separate
@@ -157,13 +158,13 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
           I can't simply connect a NTC Thermistor to it.<br/>
    **A:** Using thermistors directly in particular over longer cables
           results in noisy measurements as they have a high
-	  impedance which results in less robust machines.
+	  impedance which results in less robust readings.
 	  Luckily, there is a standard way out: in industry settings, analog
 	  transducers of all sorts are very commonly translating their
 	  measurement range into a [current of 4..20mA][current loop].
 	  The low impedance makes this very robust. The CNC-Slot connector
 	  encourages this best practice and also makes it compatible with a
-	  myriad of existing sensors.<br/>
+	  large number of existing industry standard sensors.<br/>
 	  Do adapt the thermistor, you need a little op-amp circuit on the
 	  machine side (best: close to the thermistor to minimize noise).
 
@@ -171,8 +172,7 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
           complicated as with the thermistor ?<br/>
    **A:** No. You just connect a microswitch between the connector and GND.<br/>
           Current loop in that case means that the controller board will send
-	  a current of 10-20mA through the switch to make sure to not pick up
-	  noise.
+	  a current of 10-20mA through the switch to avoid noise.
 
 ## Kicad Libraries
 
@@ -181,12 +181,12 @@ There is a schematic symbol library in the [`kicad-library/`](./kicad-library)
 directory featuring three symbols to be used for implementing the control
 board or machine side in the `cnc-slot.lib` file.
 
-The symbols are all the same size so that it is easy to upgrade without having
-to re-wire.
+The symbols are all the same size with fixed pin locations so that it is easy
+to upgrade without having to re-wire in the schematic.
 
 ![](./img/cnc-slot-comparison.png)
 
-## Footprints
+### Footprints
 
 For the card edge, there is a footprint including necessary `Edge.Cuts`
 layer in the [`cnc-slot.pretty`](./cnc-slot.pretty) directory.
