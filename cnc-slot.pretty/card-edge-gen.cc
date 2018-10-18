@@ -89,8 +89,8 @@ static void pad(int n, float pos_y, bool recessed, const char *layer) {
     pad_len -= recess_shorter;
     pos_x += recess_shorter/2;
 
-    printf("  (pad %d smd roundrect (at %.2f %.2f) (size %.2f 1.27) "
-           "(drill (offset %.2f 0)) (layers %s)(roundrect_rratio 0.25))\n",
+    printf("  (pad %d smd rect (at %.2f %.2f) (size %.2f 1.27) "
+           "(drill (offset %.2f 0)) (layers %s))\n",
            n, pos_x, pos_y, pad_len, -origin_x, layer);
 }
 
