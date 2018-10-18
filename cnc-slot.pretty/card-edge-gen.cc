@@ -58,10 +58,10 @@ void text(float x, float y, bool front, const char *txt) {
     if (!txt) return;
     if (front) {
         printf("  (fp_text user \"%s\" (at %.2f %.2f) (layer F.SilkS) (effects (font (size 1 1) (thickness 0.15)) (justify left)))\n",
-               x, y, txt);
+               txt, x, y);
     } else {
         printf("  (fp_text user \"%s\" (at %.2f %.2f) (layer B.SilkS) (effects (font (size 1 1) (thickness 0.15)) (justify right mirror)))\n",
-               x, y, txt);
+               txt, x, y);
     }
 }
 
@@ -79,7 +79,6 @@ static void lineto(float x, float y) {
 
 static void pad(int n, float pos_y, bool recessed, const char *layer) {
     const float trace_origin = 1.27;
-    const float solder_margin = 2.5;
     float pad_len = kSlotDeep + trace_origin;
     const float origin_x = pad_len/2 - trace_origin;
     float pos_x = 0;
@@ -91,8 +90,15 @@ static void pad(int n, float pos_y, bool recessed, const char *layer) {
     pos_x += recess_shorter/2;
 
     printf("  (pad %d smd roundrect (at %.2f %.2f) (size %.2f 1.27) "
-           "(drill (offset %.2f 0)) (layers %s)(roundrect_rratio 0.25) (solder_mask_margin %.2f))\n",
-           n, pos_x, pos_y, pad_len, -origin_x, layer, solder_margin);
+           "(drill (offset %.2f 0)) (layers %s)(roundrect_rratio 0.25))\n",
+           n, pos_x, pos_y, pad_len, -origin_x, layer);
+}
+
+static void rect(float x, float y, float width, float height,
+                 const char *layer) {
+    printf("  (fp_poly (pts (xy %f %f) (xy %f %f) (xy %f %f) (xy %f %f)) "
+           "(layer %s) (width 0.1))\n",
+           x, y, x + width, y, x + width, y + height, x, y + height, layer);
 }
 
 static int usage(const char *progname) {
@@ -117,11 +123,12 @@ int main(int argc, char *argv[]) {
     const float corner = 0.7;
     const float top_radius = 0.635;
 
-    printf(kHeader, positions, time(nullptr));
+    printf(kHeader, positions, (unsigned int)time(nullptr));
 
     fprintf(stderr, "Pos: %d Contacts wide: %.2f Edge-width: %.2f\n",
             positions, len, len + 2*extra_wide);
 
+    // Edge cut around slot.
     moveto(0, -start_component);
     lineto(0, -len/2 - extra_wide - top_radius);
     printf("  (fp_arc (start %f %f) (end %f %f) (angle -90) (layer Edge.Cuts) (width 0.05))\n", -top_radius, ypos, -top_radius, -len/2 - extra_wide);
@@ -138,6 +145,12 @@ int main(int argc, char *argv[]) {
            -top_radius, len/2 + extra_wide);
     moveto(0, len/2 + extra_wide + top_radius);
     lineto(0, start_component);
+
+    // No solder mask around fingers.
+    rect(-slot_thick, -len/2 - extra_wide, slot_thick, len + 2*extra_wide,
+         "F.Mask");
+    rect(-slot_thick, -len/2 - extra_wide, slot_thick, len + 2*extra_wide,
+         "B.Mask");
 
     for (int i = 0; i < positions; ++i) {
         pad(2*i+1, -len/2 + distance/2 + i*distance,

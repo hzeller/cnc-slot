@@ -1,3 +1,4 @@
+CXXFLAGS=-Wall -Wextra
 
 all : cnc-card-edge-25.kicad_mod cnc-card-edge-31.kicad_mod cnc-card-edge-36.kicad_mod
 
