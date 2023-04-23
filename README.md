@@ -1,13 +1,20 @@
-# CNCard Standard Slot connector
+# CNC-Slot - A standardized card-slot connector for CNC machines
 
-_Request for comments. Work in Progress. Not finalized yet._
+CNC-Slot aims to simplify wiring of 3D printers, laser cutters or CNC
+routers by putting commonly used signals and wires on a card-edge
+connector. This will allow to easily swap controllers.
+
+This was originally discussed on [a gist](https://gist.github.com/hzeller/65a6a0b18b8936f87faa7d9be047f4e0).
 
 ## Why a standard connector ?
 
 Status quo is, that there are many boards out there that each provide their own
-connectors for motors, endswitches and PWM, and wiring up any machine to a
-motor controller board is a mess and requires careful labeling of wires. Any
-3D printer cabling at the controller board I have seen has always been a mess.
+connectors for motors, endswitches and PWM. Typically there is a mix of
+Molex connectors, screw terminals and solder connections, often on all sides
+of the controller boards.
+Wiring up any machine to a motor controller board is a mess and requires
+careful labeling of wires. Any 3D printer cabling at the controller board
+I have seen has always been a mess.
 
 Replacing a board with some other board of another manufacturer requires
 wiring in different places, possibly re-crimping cables etc.
@@ -36,19 +43,18 @@ use-cases in these machines. The electrical connection is
   * a PCB with card edge 'fingers' on the machine side. That board is the
     endpoint of all the wire harness for that particular machine.
   * There are three defined sizes with 25pos, 31pos and 36pos card edge
-    connectors
+    connectors with increasing features.
 
 _Further definition for physical size options of the controller cartridge
 cases, fan options etc. have to be defined._
 
 The goals are to cover typical use cases in these small machines:
    * Controls bipolar stepper motors up to 3-4A.
-   * Provides 2 high power and 2 low power PWM outputs
+   * Provides 2 high power and 2 low power PWM outputs.
    * Strongly suggests and requires a couple of safety features.
    * Has a fixed layout, so that a particular pin always is at the same
      place no matter the manufacturer of the controller cartridge.
-   * Suggests a couple of serial busses that are more and more needed in
-     modern devices.
+   * Suggests a couple of serial busses that are needed in modern devices.
    * Multiple options available to cover different amount of I/O lines from
      25pos to 36pos card-slot. The smallest 25 Pos configuration good for a
      typical 3D printer.
@@ -61,11 +67,13 @@ The fingers on the card edge come in two lengths
     are triggered first when the connectors are separated.
 
 All output pins can only switch on iff the two e-stop wires on pin 1 and 50
-are connected with each other (this will be a current loop of 10mA or so).
+are connected with each other (a current loop of 10mA-20mA).
 The fact that the two pins are recessed and at opposite ends of the connector
 will make sure that the outputs are switched off before the connector is being
-disconnected completely. This prevents fried motor drivers and accidental shorts.
-Even a brief interruption of the e-stop will require a reset from software.
+disconnected completely or is 'wiggled' in/out at an angle.
+This prevents fried motor drivers and accidental shorts.
+
+Even a brief interruption of the e-stop shall require a reset from software.
 
 N/C = Not Connected. Typically place holders for Version #1 of this spec.
       Must not be connected to anything to allow future use.
@@ -112,16 +120,16 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 ## FAQ
  * **Q:** why are the motors numbered Motor_1, Motor_2, ... and
           not e.g. X, Y, Z ?<br/>
-   **A:** Depending on the geometry of the machine, this can have
+   **A:** Depending on the geometry or kinematics of the machine, this can have
           different meanings. The mapping of motor number to axis happens
-	  in your motion control system configuration.
+          in your motion control system configuration.
 
  * **Q:** Why didn't you include feature _foo_ or _bar_ ?
           It would only use two pins.<br/>
    **A:** There are a myriad of potential features, but the pins are limited.
           The specification intentionally leaves it open to add separate
-	  additional connectors to the control board if needed, while the bulk
-	  of commonly needed features are covered by this CNC-Slot.<br/>
+          additional connectors to the control board if needed, while the bulk
+          of commonly needed features are covered by this CNC-Slot.<br/>
           It is encouraged to implement purely digital features
           using the high-speed serial busses provided and are already commonly
           used in the industry.<br/>
@@ -133,28 +141,29 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
           I can't simply connect a NTC Thermistor to it.<br/>
    **A:** Using thermistors directly in particular over longer cables
           results in noisy measurements as they have a high
-	  impedance which results in less robust readings.
-	  Luckily, there is a standard way out: in industry settings, analog
-	  transducers of all sorts are very commonly translating their
-	  measurement range into a [current of 4..20mA][current loop].
-	  The low impedance makes this very robust. The CNC-Slot connector
-	  encourages this best practice and also makes it compatible with a
-	  large number of existing industry standard sensors.<br/>
-	  Do adapt the thermistor, you need a little op-amp circuit on the
-	  machine side (best: close to the thermistor to minimize noise).
+          impedance which results in less robust readings.
+          Luckily, there is a standard way out: in industry settings, analog
+          transducers of all sorts are very commonly translating their
+          measurement range into a [current of 4..20mA][current loop].
+          The low impedance makes this very robust. The CNC-Slot connector
+          encourages this best practice and also makes it compatible with a
+          large number of existing industry standard sensors.<br/>
+          Do adapt the thermistor, you need a little op-amp circuit on the
+          machine side (best: physically close to the thermistor to minimize
+          noise).
 
  * **Q:** I see the end-switches are also labelled as current loop. Is that
           complicated as with the thermistor ?<br/>
    **A:** No. You just connect a microswitch between the connector and GND.<br/>
           Current loop in that case means that the controller board will send
-	  a current of 10-20mA through the switch to avoid noise.
+          a current of 10-20mA through the switch to avoid noise.
 
 ## Kicad Libraries
 
 ### Schematic symbol
 There is a schematic symbol library in the [`kicad-library/`](./kicad-library)
 directory featuring three symbols to be used for implementing the control
-board or machine side in the `cnc-slot.lib` file.
+board or machine side in the `cnc-slot.kicad_sym` file.
 
 The symbols are all the same size with fixed pin locations so that it is easy
 to upgrade without having to re-wire in the schematic.
@@ -176,7 +185,7 @@ recessed pins for the Emergency stop.
 ![](./img/card-edge-25-render.png)
 
 ### Design considerations
-(some grab-bag of loosely formulated goals)
+(some grab-bag of loosely formulated goals used in the design process)
 
   * Interoperability: Provides a standardized output to allow easy exchange of
     controller boards and allow independent competition in the controller
@@ -188,10 +197,10 @@ recessed pins for the Emergency stop.
     harness inside the machine terminate in one place with a specific interface.
   * Non Goals: Explicitly does not define the interfacing
     on the data side - USB, Ethernet, Wireless ? GCode or simple Sub-D25 stepper
-    input ? LCD display and user interface or not ?
-    This is part of the feature-set provided by the cartridge, but not part
+    input ? LCD display and user interface or not ? SD-Card reading ?
+    This is part of the feature-set provided by the cartridge, but _not_ part
     of the electrical connection to the actuators and switches of the machine.
-  * Should cover typical 3D printers, smaller CNC machines or laser cutters.
+  * Should cover typical 3D printers, smaller CNC routers or laser cutters.
     * Of course, not every possible configuration can be supported with a
       limited connector with fixed pins but that is explicitly a non-goal. This
       is to define the basic functions that is needed for 98% of all devices.
