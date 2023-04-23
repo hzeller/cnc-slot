@@ -36,8 +36,8 @@ struct { const char *txt; bool recessed = false; } properties[] = {
     { "RS422_TX+" },     { "RS422_TX-" },
     { "RS485_RXTX+" },   { "RS485_RXTX-" },
     { "GND" },           { "GND" },
-    { "n/c" },           { "n/c" },
     { "Ain_1" },         { "Ain_2" },
+    { "n/c" },           { "n/c" },
     { "GND" },           { "EStop_2", true },
 
     { "SW-7"},           { "SW-8" },

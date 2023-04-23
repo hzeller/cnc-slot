@@ -102,8 +102,8 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 |20 |    RS422_TX+ | 39  | 40  | RS422_TX-   | RS422-TX. _N/C_ if not supported.
 |21 |  RS485_RXTX+ | 41  | 42  | RS485_RXTX- | RS485 Bus and/or RS422-RX; _N/C_ if not supported.
 |22 |          GND | 43  | 44  | GND
-|23 |        _N/C_ | 45  | 46  | _N/C_       | Not connected in Version #1.
-|24 |        Ain_1 | 47  | 48  | Ain_2       | Analog inputs. 4-20mA to GND.
+|23 |        Ain_1 | 45  | 46  | Ain_2       | Analog inputs. 4-20mA to GND.
+|24 |        _N/C_ | 47  | 48  | _N/C_       | Not connected in Version #1.
 |25 |          GND | 49  | 50  | EStop_2     | **[---- END 25 Pos configuration ----]**
 |26 |         SW_7 | 51  | 52  | SW_8        | similar to SW_1 to SW_6
 |27 |        _N/C_ | 53  | 54  | _N/C_       | N/C in Version #1 (future: CAN+/CAN- or I²C SDA/SCL ?)
@@ -113,7 +113,7 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 |31 |        M6_B+ | 61  | 62  | M6_B-       | **[---- END 31 Pos configuration ----]**
 |32 |        M7_A+ | 63  | 64  | M7_A-       | Stepper 7.
 |33 |        M7_B+ | 65  | 66  | M7_B-       |
-|34 |       _N/C_  | 67  | 68  | _N/C_       | TODO: what else we want ? 8th motor?
+|34 |       _N/C_  | 67  | 68  | _N/C_       | TODO: what else we want ? 8th motor? Ain?
 |35 |       _N/C_  | 69  | 70  | _N/C_
 |36 |         GND  | 71  | 72  | GND         | **[---- END 36 Pos configuration ----]**
 
