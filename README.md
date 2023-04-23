@@ -1,21 +1,45 @@
-# CNC Standard Slot connector
-Goal is to define a standardized connection between typical small CNC machines
-or 3D printers that allows to minimize the effort to cable everything.
+# CNCard Standard Slot connector
+
+_Request for comments. Work in Progress. Not finalized yet._
+
+## Why a standard connector ?
 
 Status quo is, that there are many boards out there that each provide their own
 connectors for motors, endswitches and PWM, and wiring up any machine to a
-motor controller board is a mess and requires careful labeling of wires (any
-3D printer cabling at the controller board has been a mess that I have seen).
+motor controller board is a mess and requires careful labeling of wires. Any
+3D printer cabling at the controller board I have seen has always been a mess.
+
 Replacing a board with some other board of another manufacturer requires
 wiring in different places, possibly re-crimping cables etc.
 
+The goal of this effort is to define a standardized connection between typical
+small CNC machines or 3D printers that allows to minimize the effort to cable
+everything and make it simple to exchange controller boards.
+
+CNC and 3D printer companies can provide the standardized card-slot connector
+and a bay to plug in the control board (and will probably provide their own
+controller board with it).
+
+The control board can be provided from independent vendors that provide the
+same compatible electrical interface.
+
+With the hurdle of the machine specific wiring out of the way, this will allow
+competition and innovation in the field of motion control hardware.
+
+## Specification
+
 This effort defines a card edge connector that should cover the typical
 use-cases in these machines. The electrical connection is
-  * a 0.1" pitch card edge connector on the controller board side (the "controller cartridge")
-  * a PCB with card edge 'fingers' on the machine side. That board is the origin
-    of all the wire harness for that particular machine.
-Further definition for sizes of the controller cartridge cases, fan options etc.
-have to be defined.
+
+  * a 0.1" pitch card edge connector on the controller board side
+    (Let's call this the "controller cartridge")
+  * a PCB with card edge 'fingers' on the machine side. That board is the
+    endpoint of all the wire harness for that particular machine.
+  * There are three defined sizes with 25pos, 31pos and 36pos card edge
+    connectors
+
+_Further definition for physical size options of the controller cartridge
+cases, fan options etc. have to be defined._
 
 The goals are to cover typical use cases in these small machines:
    * Controls bipolar stepper motors up to 3-4A.
@@ -25,58 +49,9 @@ The goals are to cover typical use cases in these small machines:
      place no matter the manufacturer of the controller cartridge.
    * Suggests a couple of serial busses that are more and more needed in
      modern devices.
-   * Smallest 25 Pos configuration good for a typical 3D printer.
-
-### Design considerations
-(some grab-bag of loosely formulated goals)
-
-  * Interoperability: Provides a standardized output to allow easy exchange of
-    controller boards and allow independent competition in the controller
-    world, all providing this standard connector. Competition can focus on
-    software features, microstepping, motor current capability etc.; the standardized
-    connector encourages the users experimenting with different solutions.
-  * Goal is to cover the _electrical_ connection to the machine
-    (motors, switches, ...), that will allow to have the complicated cable
-    harness inside the machine terminate in one place with a specific interface.
-  * Non Goals: Explicitly does not define the interfacing
-    on the data side - USB, Ethernet, Wireless ? GCode or simple Sub-D25 stepper
-    input ? LCD display and user interface or not ?
-    This is part of the feature-set provided by the cartridge, but not part
-    of the electrical connection to the actuators and switches of the machine.
-  * Should cover typical 3D printers, smaller CNC machines or laser cutters.
-    * Of course, not every possible configuration can be supported with a
-      limited connector with fixed pins but that is explicitly a non-goal. This
-      is to define the basic functions that is needed for 98% of all devices.
-      It is encouraged to provide additional features via screw terminals or
-      the specified robust RS485 bus.
-  * Within the same standard connector, there then can be distinguishing
-    features of various controllers: provided current for motors, or if the
-    two power PWMs can be used together as an H-Bridge.
-  * Simplify wire harnesses. They are now fixed part of the printer all
-    connecting to the card-edge connector. Easy to pre-fabricate with the
-    right cable lengths. Less issues with confusing 'cable salads'.
-  * Multiple configurations from minimal 3D printer with up to four steppers
-    (with a **25 Pos** card edge connector that is shorter than a 70mm PCB) to
-    larger machines with specific requirements: Next level with **31 Pos**
-    and **36 pos** level adding more motors.
-  * Enforce some safety features and electric recommendations directly in the
-    specification that are not yet commonly seen in many controllers today:
-     * The high power PWM outputs are only high-side switches to minimize
-       dangerous heater-stuck-on failure scenarios.
-     * Emergency Stop Switch is part of the specification. Contacts
-       strategically placed so that card insertion issues or hot-unplugging
-       trigger it.
-     * Have all kinds of external switch inputs be current loops and
-       normally closed for more resilience.
-  * For periphery: suggest busses that are proper in the noisy environment (RS422/485)
-    instead of flaky I²C not well suited for an electrically noisy machine.
-  * There are two analog inputs, and they define a particular input range in
-    voltage.
-    That means that adapter amplifiers need to be done on
-    the machine side. This allows to adapt various inputs (e.g. Thermistors,
-    PT100, ...) without assuming a particular analog interface.
-  * (After initial inclusion of power connection, this is now removed as this
-    might be handled differently per device)
+   * Multiple options available to cover different amount of I/O lines from
+     25pos to 36pos card-slot. The smallest 25 Pos configuration good for a
+     typical 3D printer.
 
 ### Finger levels
 The fingers on the card edge come in two lengths
@@ -199,5 +174,56 @@ The library provides the three variants of card-edge footprints including the
 recessed pins for the Emergency stop.
 
 ![](./img/card-edge-25-render.png)
+
+### Design considerations
+(some grab-bag of loosely formulated goals)
+
+  * Interoperability: Provides a standardized output to allow easy exchange of
+    controller boards and allow independent competition in the controller
+    world, all providing this standard connector. Competition can focus on
+    software features, microstepping, motor current capability etc.; the standardized
+    connector encourages the users experimenting with different solutions.
+  * Goal is to cover the _electrical_ connection to the machine
+    (motors, switches, ...), that will allow to have the complicated cable
+    harness inside the machine terminate in one place with a specific interface.
+  * Non Goals: Explicitly does not define the interfacing
+    on the data side - USB, Ethernet, Wireless ? GCode or simple Sub-D25 stepper
+    input ? LCD display and user interface or not ?
+    This is part of the feature-set provided by the cartridge, but not part
+    of the electrical connection to the actuators and switches of the machine.
+  * Should cover typical 3D printers, smaller CNC machines or laser cutters.
+    * Of course, not every possible configuration can be supported with a
+      limited connector with fixed pins but that is explicitly a non-goal. This
+      is to define the basic functions that is needed for 98% of all devices.
+      It is encouraged to provide additional features via screw terminals or
+      the specified robust RS485 bus.
+  * Within the same standard connector, there then can be distinguishing
+    features of various controllers: provided current for motors, or if the
+    two power PWMs can be used together as an H-Bridge.
+  * Simplify wire harnesses. They are now fixed part of the printer all
+    connecting to the card-edge connector. Easy to pre-fabricate with the
+    right cable lengths. Less issues with confusing 'cable salads'.
+  * Multiple configurations from minimal 3D printer with up to four steppers
+    (with a **25 Pos** card edge connector that is shorter than a 70mm PCB) to
+    larger machines with specific requirements: Next level with **31 Pos**
+    and **36 pos** level adding more motors.
+  * Enforce some safety features and electric recommendations directly in the
+    specification that are not yet commonly seen in many controllers today:
+     * The high power PWM outputs are only high-side switches to minimize
+       dangerous heater-stuck-on failure scenarios.
+     * Emergency Stop Switch is part of the specification. Contacts
+       strategically placed so that card insertion issues or hot-unplugging
+       trigger it.
+     * Have all kinds of external switch inputs be current loops and
+       normally closed for more resilience.
+  * For periphery: suggest busses that are proper in the noisy environment (RS422/485)
+    instead of flaky I²C not well suited for an electrically noisy machine.
+  * There are two analog inputs, and they define a particular input range in
+    voltage.
+    That means that adapter amplifiers need to be done on
+    the machine side. This allows to adapt various inputs (e.g. Thermistors,
+    PT100, ...) without assuming a particular analog interface.
+  * (After initial inclusion of power connection, this is now removed as this
+    might be handled differently per device)
 
 [current loop]: https://en.wikipedia.org/wiki/Current_loop
