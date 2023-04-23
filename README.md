@@ -6,6 +6,13 @@ connector. This will allow to easily swap controllers.
 
 This was originally discussed on [a gist](https://gist.github.com/hzeller/65a6a0b18b8936f87faa7d9be047f4e0).
 
+## Pre-Version 1.0
+
+Note, Version 1.0 is not released yet, there might still be small changes till
+Version 1 is concluded after comments have been integrated. In particular
+some currently `N/C` pins might be connected and the last pins in the
+wide 36-pin configuration might change.
+
 ## Why a standard connector ?
 
 Status quo is, that there are many boards out there that each provide their own
@@ -111,9 +118,9 @@ N/C = Not Connected. Typically place holders for Version #1 of this spec.
 |29 |        M5_B+ | 57  | 58  | M5_B-       |
 |30 |        M6_A+ | 59  | 60  | M6_A-       | Stepper 6
 |31 |        M6_B+ | 61  | 62  | M6_B-       | **[---- END 31 Pos configuration ----]**
-|32 |        M7_A+ | 63  | 64  | M7_A-       | Stepper 7.
+|32 |        M7_A+ | 63  | 64  | M7_A-       | Stepper 7 (Needed ? Maybe instead use 63..68 for 3 quadrature encoders to allow for servo control ?)
 |33 |        M7_B+ | 65  | 66  | M7_B-       |
-|34 |       _N/C_  | 67  | 68  | _N/C_       | TODO: what else we want ? 8th motor? Ain?
+|34 |       _N/C_  | 67  | 68  | _N/C_       | TODO: what else we want ? 8th motor? Ain? Quadrature Encoder ?
 |35 |       _N/C_  | 69  | 70  | _N/C_
 |36 |         GND  | 71  | 72  | GND         | **[---- END 36 Pos configuration ----]**
 
